@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="button_buy">Купить</string>
+    <string name="button_store_front">Store-Front</string>
+    <string name="button_back_end">Back-End</string>
+    <string name="text_input_product_name">Название</string>
+    <string name="text_input_product_price">Цена</string>
+    <string name="text_input_product_quantity">Количество</string>
+</resources>

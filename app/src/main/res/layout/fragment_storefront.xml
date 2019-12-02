@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragmentStoreFront">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/storeFrontProductNameTextView">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/storeFrontPriceTextView">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/storeFrontQuantityTextView">
+    </TextView>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="36dp"
+        android:id="@+id/storeFrontButtonBuy"
+        android:text="@string/button_buy"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/storeFrontButtonStoreFront"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.5"
+            android:text="@string/button_store_front"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/storeFrontButtonBackEnd"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.5"
+            android:text="@string/button_back_end"
+            />
+    </LinearLayout>
+
+</LinearLayout>
