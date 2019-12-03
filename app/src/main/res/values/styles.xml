@@ -6,7 +6,10 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryVariant">@color/color_primary_variant</item>
         <item name="colorSecondary">@color/color_secondary</item>
+        <item name="toolbarStyle">@style/Widget.MyApp.TooBar</item>
 
     </style>
-
+    <style name="Widget.MyApp.TooBar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="background">?attr/colorPrimary</item>
+    </style>
 </resources>

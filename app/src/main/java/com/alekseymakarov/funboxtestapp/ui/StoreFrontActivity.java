@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,8 +15,9 @@ import com.alekseymakarov.funboxtestapp.model.Product;
 import com.alekseymakarov.funboxtestapp.utils.InitialDataParser;
 import com.alekseymakarov.funboxtestapp.viewmodel.StoreFrontViewModel;
 
-public class StoreFrontActivity extends AppCompatActivity implements
-        OnSaveProductsFromFileToDBListener, OnUpdateProductQuantityToDBListener {
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
+public class StoreFrontActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private StoreFrontViewModel storeFrontViewModel;
@@ -48,17 +50,12 @@ public class StoreFrontActivity extends AppCompatActivity implements
         buttonStoreFront.setEnabled(false);
 
         buttonBuy.setOnClickListener(buttonBuyListener);
-        buttonStoreFront.setOnClickListener(buttonStoreFrontListener);
         buttonBackEnd.setOnClickListener(buttonBackEndListener);
     }
 
     private void loadProductsInAdapter() {
         storeFrontViewModel.getProducts().observe(this, products -> {
-           /*for (int i = 0; i<products.size();i++){
-                if (products.get(i).getQuantity()==0){
-                    products.remove(products.get(i));
-                }
-            }*/
+
             adapter.setProducts(products);
         });
 
@@ -72,9 +69,15 @@ public class StoreFrontActivity extends AppCompatActivity implements
         String IS_FIRST_RUN = "isFirstRun";
 
         if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
-            sharedPreferences.edit().putBoolean(IS_FIRST_RUN, false).commit();
+            sharedPreferences.edit().putBoolean(IS_FIRST_RUN, false).apply();
+
             storeFrontViewModel.saveProducts
-                    (InitialDataParser.readInitialProductData(this), this);
+                    (InitialDataParser.readInitialProductData(this), new OnSaveProductsFromFileToDBListener() {
+                        @Override
+                        public void onSaveFromFileToDBFinished() {
+                            loadProductsInAdapter();
+                        }
+                    });
         } else {
             loadProductsInAdapter();
         }
@@ -85,26 +88,21 @@ public class StoreFrontActivity extends AppCompatActivity implements
         int currentQuantity = prod.getQuantity();
         if (currentQuantity > 0) {
             prod.setQuantity(currentQuantity - 1);
-            storeFrontViewModel.updateProductQuantity(prod, this);
+            storeFrontViewModel.updateProductQuantity(prod, new OnUpdateProductQuantityToDBListener() {
+                @Override
+                public void onUpdateProductQuantityToDBFinished() {
+                    loadProductsInAdapter();
+                }
+            });
         }
 
     };
 
-    View.OnClickListener buttonStoreFrontListener = v -> {
-
-    };
-
     View.OnClickListener buttonBackEndListener = v -> {
-
+        Intent intent = new Intent(this, BackEndActivity.class);
+        intent.addFlags(FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     };
-
-    public void onSaveFromFileToDBFinished() {
-        loadProductsInAdapter();
-    }
-
-    public void onUpdateProductQuantityToDBFinished() {
-        loadProductsInAdapter();
-    }
 
 }
 
