@@ -10,10 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InitialDataParser {
 
-    public static ArrayList<Product> readInitialProductData(Context context) {
+    public static List<Product> readInitialProductData(Context context) {
         ArrayList<Product> products = new ArrayList<>();
         if (context != null) {
             try {

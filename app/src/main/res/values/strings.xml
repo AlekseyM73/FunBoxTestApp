@@ -6,4 +6,8 @@
     <string name="text_input_product_name">Название</string>
     <string name="text_input_product_price">Цена</string>
     <string name="text_input_product_quantity">Количество</string>
+    <string name="price">Цена</string>
+    <string name="quantity">Количество</string>
+    <string name="rub">руб.</string>
+    <string name="piece">шт.</string>
 </resources>

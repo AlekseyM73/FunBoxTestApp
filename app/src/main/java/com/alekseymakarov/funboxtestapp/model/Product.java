@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity
+@Entity (tableName = "product_table")
 public class Product {
 
     @PrimaryKey (autoGenerate = true)
