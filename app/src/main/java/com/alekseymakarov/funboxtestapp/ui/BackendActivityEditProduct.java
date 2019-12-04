@@ -1,8 +1,6 @@
 package com.alekseymakarov.funboxtestapp.ui;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,23 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.application.App;
-import com.alekseymakarov.funboxtestapp.dao.ProductDAO;
 import com.alekseymakarov.funboxtestapp.model.Product;
+import com.alekseymakarov.funboxtestapp.repository.Repository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Arrays;
-
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
-
 import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 
 public class BackendActivityEditProduct extends AppCompatActivity {
@@ -47,14 +40,14 @@ public class BackendActivityEditProduct extends AppCompatActivity {
     private MenuItem menuCancel;
     private boolean isEditBtnPressed = false;
     private Disposable subscribe;
-    private ProductDAO productDAO;
+    private Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backend_edit_product);
 
-        productDAO = App.productDatabase.getProductDAO();
+        repository = new Repository(App.productDatabase.getProductDAO());
 
         setViews();
 
@@ -184,7 +177,7 @@ public class BackendActivityEditProduct extends AppCompatActivity {
     }
 
     private void getProduct() {
-        subscribe = productDAO.getProduct(productId)
+        subscribe = repository.getProduct(productId)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess((Product product) -> {
                 }).observeOn(AndroidSchedulers.mainThread())
@@ -214,7 +207,7 @@ public class BackendActivityEditProduct extends AppCompatActivity {
                 @Override
                 public void run() {
                     Product product = new Product(productId, name, quantity, price);
-                    productDAO.updateProduct(product);
+                    repository.updateProduct(product);
                 }
             }).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {

@@ -1,10 +1,7 @@
 package com.alekseymakarov.funboxtestapp.utils;
 
-
 import android.content.Context;
-
 import com.alekseymakarov.funboxtestapp.model.Product;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

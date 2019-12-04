@@ -7,14 +7,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.appcompat.widget.Toolbar;;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.viewmodel.BackEndViewModel;
 

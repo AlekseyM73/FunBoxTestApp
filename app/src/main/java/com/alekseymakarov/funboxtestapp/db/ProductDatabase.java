@@ -1,11 +1,9 @@
 package com.alekseymakarov.funboxtestapp.db;
 
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
 import com.alekseymakarov.funboxtestapp.dao.ProductDAO;
 import com.alekseymakarov.funboxtestapp.model.Product;
 

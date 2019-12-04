@@ -1,19 +1,15 @@
 package com.alekseymakarov.funboxtestapp.viewmodel;
 
 import android.app.Application;
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.alekseymakarov.funboxtestapp.application.App;
-import com.alekseymakarov.funboxtestapp.dao.ProductDAO;
 import com.alekseymakarov.funboxtestapp.model.Product;
+import com.alekseymakarov.funboxtestapp.repository.Repository;
 import com.alekseymakarov.funboxtestapp.ui.OnSaveProductsFromFileToDBListener;
 import com.alekseymakarov.funboxtestapp.ui.OnUpdateProductQuantityToDBListener;
-
 import java.util.ArrayList;
 import java.util.List;
 import io.reactivex.Completable;
@@ -28,18 +24,18 @@ public class StoreFrontViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private MutableLiveData<List<Product>> products;
-    private ProductDAO productDAO;
+    private Repository repository;
 
     public StoreFrontViewModel(@NonNull Application application) {
         super(application);
-        productDAO = App.productDatabase.getProductDAO();
+        repository = new Repository(App.productDatabase.getProductDAO());
     }
 
     public LiveData<List<Product>> getProducts(){
         if (products == null) {
             products = new MutableLiveData<>();
         }
-        disposable.add(productDAO.getProducts().subscribeOn(Schedulers.io())
+        disposable.add(repository.getProducts().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> {
                     ArrayList<Product> temp = new ArrayList<>();
@@ -59,7 +55,7 @@ public class StoreFrontViewModel extends AndroidViewModel {
         Completable.fromAction(new Action() {
             @Override
             public void run() {
-                productDAO.insertProducts(products);
+                repository.insertProducts(products);
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
@@ -84,7 +80,7 @@ public class StoreFrontViewModel extends AndroidViewModel {
         Completable.fromAction(new Action() {
             @Override
             public void run() {
-                productDAO.updateProduct(product);
+                repository.updateProduct(product);
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {

@@ -1,5 +1,4 @@
 package com.alekseymakarov.funboxtestapp.ui;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,15 +8,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.application.App;
-import com.alekseymakarov.funboxtestapp.dao.ProductDAO;
 import com.alekseymakarov.funboxtestapp.model.Product;
+import com.alekseymakarov.funboxtestapp.repository.Repository;
 import com.google.android.material.textfield.TextInputLayout;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -39,14 +37,14 @@ public class BackEndActivityNewProduct extends AppCompatActivity {
     private boolean isGoBackDialogWasShown;
     private final String IS_GO_BACK_DIALOG_WAS_SHOWN = "isGoBackDialogWasShown";
     private AlertDialog alertDialog;
-    private ProductDAO productDAO;
+    private Repository repository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backend_new_product);
 
-        productDAO = App.productDatabase.getProductDAO();
+        repository = new Repository(App.productDatabase.getProductDAO());
 
         setViews();
     }
@@ -121,7 +119,7 @@ public class BackEndActivityNewProduct extends AppCompatActivity {
                         Completable.fromAction(new Action() {
                             @Override
                             public void run() {
-                                productDAO.insertProduct(new Product(name,quantity,price));
+                                repository.insertProduct(new Product(name,quantity,price));
                             }
                         }).observeOn(AndroidSchedulers.mainThread())
                                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {

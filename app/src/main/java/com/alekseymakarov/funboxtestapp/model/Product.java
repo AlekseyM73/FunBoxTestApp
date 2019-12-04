@@ -2,7 +2,6 @@ package com.alekseymakarov.funboxtestapp.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
 import java.util.Objects;
 
 @Entity (tableName = "product_table")

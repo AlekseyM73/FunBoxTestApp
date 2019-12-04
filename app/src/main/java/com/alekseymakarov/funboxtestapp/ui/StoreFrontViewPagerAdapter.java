@@ -4,17 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.model.Product;
-
 import java.util.Collections;
 import java.util.List;
 

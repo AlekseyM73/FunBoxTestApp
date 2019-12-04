@@ -3,13 +3,11 @@ package com.alekseymakarov.funboxtestapp.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.model.Product;
 import com.alekseymakarov.funboxtestapp.utils.InitialDataParser;
