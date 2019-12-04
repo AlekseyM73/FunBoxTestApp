@@ -10,4 +10,21 @@
     <string name="quantity">Количество</string>
     <string name="rub">руб.</string>
     <string name="piece">шт.</string>
+    <string name="add_product_menu_item">Добавить товар</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="menu_cancel">Отменить</string>
+    <string name="add_product">Добавить товар</string>
+    <string name="the_name_can_not_be_empty">Название не может быть пустым.</string>
+    <string name="wrong_input">Неправильный ввод.</string>
+    <string name="saved">Сохранено</string>
+    <string name="save_failed">Ошибка при сохранении</string>
+    <string name="less_than_zero_input">Значения меньше нуля.</string>
+    <string name="confirm_back_dialog_title">Вернуться без сохранения?</string>
+    <string name="confirm_back_dialog">Вы уверены, что хотите выйти без сохранения?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="canceled">Отменено</string>
+    <string name="something_went_wrong">Что-то пошло не так!</string>
+    <string name="updated">Продукт обновлен</string>
+    <string name="update_failed">Ошибка при обновлении</string>
 </resources>

@@ -1,8 +1,14 @@
 package com.alekseymakarov.funboxtestapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.widget.Toolbar;;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,6 +25,7 @@ public class BackEndActivity extends AppCompatActivity {
     private BackEndRecyclerViewAdapter adapter;
     private Button buttonStoreFront;
     private Button buttonBackEnd;
+    private MenuItem menuAdd;
 
 
     @Override
@@ -37,6 +44,12 @@ public class BackEndActivity extends AppCompatActivity {
         updateView();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        updateView();
+    }
+
     private void updateView() {
         backEndViewModel.getProducts().observe(this, products -> {
             adapter.setProducts(products);
@@ -44,11 +57,36 @@ public class BackEndActivity extends AppCompatActivity {
     }
 
     private void setViews() {
+        Toolbar toolbar = findViewById(R.id.recyclerviewBackEndActivityToolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
         buttonStoreFront = findViewById(R.id.recyclerViewButtonStoreFront);
         buttonBackEnd = findViewById(R.id.recyclerViewButtonBackEnd);
         buttonBackEnd.setEnabled(false);
 
         buttonStoreFront.setOnClickListener(buttonStoreFrontListener);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_backend_add_menu, menu);
+        menuAdd = menu.findItem(R.id.recyclerview_menu_add);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.recyclerview_menu_add: {
+                Intent intent = new Intent(this
+                        , BackEndActivityNewProduct.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     View.OnClickListener buttonStoreFrontListener = v -> {

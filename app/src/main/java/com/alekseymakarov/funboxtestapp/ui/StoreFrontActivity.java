@@ -23,10 +23,6 @@ public class StoreFrontActivity extends AppCompatActivity {
     private StoreFrontViewModel storeFrontViewModel;
     private StoreFrontViewPagerAdapter adapter;
 
-    private Button buttonBuy;
-    private Button buttonStoreFront;
-    private Button buttonBackEnd;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +39,16 @@ public class StoreFrontActivity extends AppCompatActivity {
         checkForFirstStartApp();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadProductsInAdapter();
+    }
+
     private void setViews() {
-        buttonBuy = findViewById(R.id.viewPagerButtonBuy);
-        buttonStoreFront = findViewById(R.id.viewPagerButtonStoreFront);
-        buttonBackEnd = findViewById(R.id.viewPagerButtonBackEnd);
+        Button buttonBuy = findViewById(R.id.viewPagerButtonBuy);
+        Button buttonStoreFront = findViewById(R.id.viewPagerButtonStoreFront);
+        Button buttonBackEnd = findViewById(R.id.viewPagerButtonBackEnd);
         buttonStoreFront.setEnabled(false);
 
         buttonBuy.setOnClickListener(buttonBuyListener);
@@ -95,7 +97,6 @@ public class StoreFrontActivity extends AppCompatActivity {
                 }
             });
         }
-
     };
 
     View.OnClickListener buttonBackEndListener = v -> {

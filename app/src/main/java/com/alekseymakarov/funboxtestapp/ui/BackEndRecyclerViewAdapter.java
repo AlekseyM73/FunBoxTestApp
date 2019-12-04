@@ -1,6 +1,7 @@
 package com.alekseymakarov.funboxtestapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class BackEndRecyclerViewAdapter extends
         RecyclerView.Adapter<BackEndRecyclerViewAdapter.ViewHolder> {
-
+    public static final String PRODUCT_ID = "productID";
     private Context context;
     private List<Product> products = Collections.EMPTY_LIST;
     private LayoutInflater layoutInflater;
@@ -40,6 +41,15 @@ public class BackEndRecyclerViewAdapter extends
         int quantity = products.get(position).getQuantity();
         holder.recyclerviewItemName.setText(name);
         holder.recyclerviewItemQuantity.setText(quantity + " " + context.getString(R.string.piece));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, BackendActivityEditProduct.class);
+                intent.putExtra(PRODUCT_ID, products.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
