@@ -10,8 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.model.Product;
+import com.alekseymakarov.funboxtestapp.utils.EventHelper;
 import com.alekseymakarov.funboxtestapp.utils.InitialDataParser;
 import com.alekseymakarov.funboxtestapp.viewmodel.StoreFrontViewModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
@@ -20,6 +24,12 @@ public class StoreFrontActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private StoreFrontViewModel storeFrontViewModel;
     private StoreFrontViewPagerAdapter adapter;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +65,13 @@ public class StoreFrontActivity extends AppCompatActivity {
 
     private void loadProductsInAdapter() {
         storeFrontViewModel.getProducts().observe(this, products -> {
-
             adapter.setProducts(products);
         });
 
+    }
+    @Subscribe
+    public void onSaveafterEditProductFinished (EventHelper eventHelper){
+        loadProductsInAdapter();
     }
 
     private void checkForFirstStartApp() {
@@ -103,6 +116,11 @@ public class StoreFrontActivity extends AppCompatActivity {
         startActivity(intent);
     };
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 }
 
 

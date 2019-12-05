@@ -17,8 +17,12 @@ import com.alekseymakarov.funboxtestapp.R;
 import com.alekseymakarov.funboxtestapp.application.App;
 import com.alekseymakarov.funboxtestapp.model.Product;
 import com.alekseymakarov.funboxtestapp.repository.Repository;
+import com.alekseymakarov.funboxtestapp.utils.EventHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.greenrobot.eventbus.EventBus;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -206,13 +210,22 @@ public class BackendActivityEditProduct extends AppCompatActivity {
             Completable.fromAction(new Action() {
                 @Override
                 public void run() {
-                    Product product = new Product(productId, name, quantity, price);
-                    repository.updateProduct(product);
+                    try {
+                        Thread.sleep(5000);
+                        Product product = new Product(productId, name, quantity, price);
+                        repository.updateProduct(product);
+                        EventBus.getDefault().post(new EventHelper());
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+
                 }
             }).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
                 @Override
                 public void onSubscribe(Disposable d) {
+                    BackendActivityEditProduct.super.onBackPressed();
+                    finish();
                 }
 
                 @Override
@@ -220,8 +233,6 @@ public class BackendActivityEditProduct extends AppCompatActivity {
                     Toast.makeText(BackendActivityEditProduct.this,
                             getString(R.string.updated), Toast.LENGTH_LONG).show();
 
-                    BackendActivityEditProduct.super.onBackPressed();
-                    finish();
                 }
 
                 @Override

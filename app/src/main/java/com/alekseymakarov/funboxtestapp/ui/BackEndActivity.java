@@ -13,7 +13,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.alekseymakarov.funboxtestapp.R;
+import com.alekseymakarov.funboxtestapp.utils.EventHelper;
 import com.alekseymakarov.funboxtestapp.viewmodel.BackEndViewModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class BackEndActivity extends AppCompatActivity {
 
@@ -24,6 +28,11 @@ public class BackEndActivity extends AppCompatActivity {
     private Button buttonBackEnd;
     private MenuItem menuAdd;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,10 @@ public class BackEndActivity extends AppCompatActivity {
         backEndViewModel.getProducts().observe(this, products -> {
             adapter.setProducts(products);
         });
+    }
+    @Subscribe
+    public void onSaveAfterEditProductFinished (EventHelper eventHelper){
+        updateView();
     }
 
     private void setViews() {
@@ -90,4 +103,9 @@ public class BackEndActivity extends AppCompatActivity {
         onBackPressed();
     };
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 }

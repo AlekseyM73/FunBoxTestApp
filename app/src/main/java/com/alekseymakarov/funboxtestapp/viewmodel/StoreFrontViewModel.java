@@ -10,6 +10,8 @@ import com.alekseymakarov.funboxtestapp.model.Product;
 import com.alekseymakarov.funboxtestapp.repository.Repository;
 import com.alekseymakarov.funboxtestapp.ui.OnSaveProductsFromFileToDBListener;
 import com.alekseymakarov.funboxtestapp.ui.OnUpdateProductQuantityToDBListener;
+import com.alekseymakarov.funboxtestapp.utils.EventHelper;
+import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 import io.reactivex.Completable;
@@ -80,7 +82,14 @@ public class StoreFrontViewModel extends AndroidViewModel {
         Completable.fromAction(new Action() {
             @Override
             public void run() {
-                repository.updateProduct(product);
+                try{
+                    Thread.sleep(3000);
+                    repository.updateProduct(product);
+                    EventBus.getDefault().post(new EventHelper());
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(new CompletableObserver() {
