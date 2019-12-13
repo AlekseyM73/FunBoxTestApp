@@ -1,6 +1,8 @@
 package com.alekseymakarov.funboxtestapp.utils;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.alekseymakarov.funboxtestapp.model.Product;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,15 +23,17 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static io.reactivex.Observable.fromIterable;
+import static io.reactivex.Observable.never;
 
 public class InitialDataParser {
-    private static CompositeDisposable disposable;
+    private static CompositeDisposable disposable = new CompositeDisposable();
 
     public static Observable<List<Product>> readFromCsv(Context context) {
                 // TODO: как реализовать?
                         return Observable.error(new NoSuchElementException("не реализовано"));
             }
             public static Observable<List<Product>> readFromJson(Context context) {
+                Log.d("debug","readFromJson");
                 return Observable.error(new NoSuchElementException("не реализовано"));
             }
 
@@ -43,30 +47,37 @@ public class InitialDataParser {
                disposable.add(readFromCsv(context)
                       .subscribeOn(Schedulers.io())
                      // .observeOn(AndroidSchedulers.mainThread())
+                       .retryWhen(e-> {
+                           Log.d("debug","retryWhen");
+                           return null;
+                       })
                         .subscribeWith(new DisposableObserver<List<Product>>() {
                             @Override
                             public void onNext(List<Product> products) {
+                                Log.d("debug","onNext");
                                 prod.addAll(products);
                             }
 
                             @Override
                             public void onError(Throwable e) {
+                                Log.d("debug","onError");
                                 disposable.add(readFromJson(context)
                                         .subscribeOn(Schedulers.io())
                                         .subscribeWith(new DisposableObserver<List<Product>>(){
                                             @Override
                                             public void onNext(List<Product> products) {
+                                                Log.d("debug","onError.onNext");
                                                 prod.addAll(products);
                                             }
 
                                             @Override
                                             public void onError(Throwable e) {
-
+                                                Log.d("debug","onError.onError");
                                             }
 
                                             @Override
                                             public void onComplete() {
-
+                                                Log.d("debug","onError.onComplete");
                                             }
                                         }));
                             }
@@ -76,6 +87,7 @@ public class InitialDataParser {
 
                             }
                         }));
+                Log.d("debug","return products");
                disposable.dispose();
                return Observable.fromArray(prod);
             }

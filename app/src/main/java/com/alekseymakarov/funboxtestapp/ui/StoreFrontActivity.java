@@ -81,7 +81,8 @@ public class StoreFrontActivity extends AppCompatActivity {
         // else load data from db
         String IS_FIRST_RUN = "isFirstRun";
 
-        if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
+        InitialDataParser.readFromCsvOrFallbackToJson(this);
+       /* if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
             sharedPreferences.edit().putBoolean(IS_FIRST_RUN, false).apply();
 
             storeFrontViewModel.saveProducts
@@ -93,7 +94,7 @@ public class StoreFrontActivity extends AppCompatActivity {
                     });
         } else {
             loadProductsInAdapter();
-        }
+        }*/
     }
 
     View.OnClickListener buttonBuyListener = v -> {
