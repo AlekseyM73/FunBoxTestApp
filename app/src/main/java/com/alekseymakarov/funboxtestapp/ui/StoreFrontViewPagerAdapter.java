@@ -77,6 +77,13 @@ public class StoreFrontViewPagerAdapter
 
     }
     public Product getProductFromAdapter (int position){
-        return products.get(position);
+        if (!products.isEmpty()){
+            return products.get(position);
+        }
+        else {
+            return null;
+        }
+
+
     }
 }

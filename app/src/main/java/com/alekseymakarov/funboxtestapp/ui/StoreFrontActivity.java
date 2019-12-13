@@ -70,7 +70,7 @@ public class StoreFrontActivity extends AppCompatActivity {
 
     }
     @Subscribe
-    public void onSaveafterEditProductFinished (EventHelper eventHelper){
+    public void onSaveAfterEditProductFinished (EventHelper eventHelper){
         loadProductsInAdapter();
     }
 
@@ -97,16 +97,18 @@ public class StoreFrontActivity extends AppCompatActivity {
     }
 
     View.OnClickListener buttonBuyListener = v -> {
-        Product prod = adapter.getProductFromAdapter(viewPager.getCurrentItem());
-        int currentQuantity = prod.getQuantity();
-        if (currentQuantity > 0) {
-            prod.setQuantity(currentQuantity - 1);
-            storeFrontViewModel.updateProductQuantity(prod, new OnUpdateProductQuantityToDBListener() {
-                @Override
-                public void onUpdateProductQuantityToDBFinished() {
-                    loadProductsInAdapter();
-                }
-            });
+        if (adapter.getProductFromAdapter(viewPager.getCurrentItem()) != null) {
+            Product prod = adapter.getProductFromAdapter(viewPager.getCurrentItem());
+            int currentQuantity = prod.getQuantity();
+            if (currentQuantity > 0) {
+                prod.setQuantity(currentQuantity - 1);
+                storeFrontViewModel.updateProductQuantity(prod, new OnUpdateProductQuantityToDBListener() {
+                    @Override
+                    public void onUpdateProductQuantityToDBFinished() {
+                        loadProductsInAdapter();
+                    }
+                });
+            }
         }
     };
 
