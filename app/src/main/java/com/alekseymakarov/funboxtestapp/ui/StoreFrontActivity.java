@@ -16,7 +16,6 @@ import com.alekseymakarov.funboxtestapp.viewmodel.StoreFrontViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 public class StoreFrontActivity extends AppCompatActivity {
@@ -81,8 +80,7 @@ public class StoreFrontActivity extends AppCompatActivity {
         // else load data from db
         String IS_FIRST_RUN = "isFirstRun";
 
-        InitialDataParser.readFromCsvOrFallbackToJson(this);
-       /* if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
+        if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
             sharedPreferences.edit().putBoolean(IS_FIRST_RUN, false).apply();
 
             storeFrontViewModel.saveProducts
@@ -94,7 +92,7 @@ public class StoreFrontActivity extends AppCompatActivity {
                     });
         } else {
             loadProductsInAdapter();
-        }*/
+        }
     }
 
     View.OnClickListener buttonBuyListener = v -> {

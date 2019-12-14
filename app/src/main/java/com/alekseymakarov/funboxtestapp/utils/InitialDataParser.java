@@ -19,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -26,19 +27,19 @@ import static io.reactivex.Observable.fromIterable;
 import static io.reactivex.Observable.never;
 
 public class InitialDataParser {
-    private static CompositeDisposable disposable = new CompositeDisposable();
 
     public static Observable<List<Product>> readFromCsv(Context context) {
                 // TODO: как реализовать?
                         return Observable.error(new NoSuchElementException("не реализовано"));
             }
             public static Observable<List<Product>> readFromJson(Context context) {
-                Log.d("debug","readFromJson");
                 return Observable.error(new NoSuchElementException("не реализовано"));
             }
 
             public static Observable<List<Product>> readFromCsvOrFallbackToJson(Context context) {
-                ArrayList<Product> prod = new ArrayList<>();
+                CompositeDisposable disposable = new CompositeDisposable();
+                List<Product> productList = new ArrayList<>();
+                List<List<Product>> listOfList = new ArrayList<>();
                 // TODO: Допустим есть readFromCsv и readFromJson,
                         //  при этом csv может отсутствовать, либо содержать некорректные данные.
                                 //  Как реализовать логику:
@@ -46,40 +47,18 @@ public class InitialDataParser {
 
                disposable.add(readFromCsv(context)
                       .subscribeOn(Schedulers.io())
-                     // .observeOn(AndroidSchedulers.mainThread())
-                       .retryWhen(e-> {
-                           Log.d("debug","retryWhen");
-                           return null;
-                       })
                         .subscribeWith(new DisposableObserver<List<Product>>() {
                             @Override
                             public void onNext(List<Product> products) {
-                                Log.d("debug","onNext");
-                                prod.addAll(products);
+                                productList.addAll(products);
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.d("debug","onError");
-                                disposable.add(readFromJson(context)
-                                        .subscribeOn(Schedulers.io())
-                                        .subscribeWith(new DisposableObserver<List<Product>>(){
-                                            @Override
-                                            public void onNext(List<Product> products) {
-                                                Log.d("debug","onError.onNext");
-                                                prod.addAll(products);
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                Log.d("debug","onError.onError");
-                                            }
-
-                                            @Override
-                                            public void onComplete() {
-                                                Log.d("debug","onError.onComplete");
-                                            }
-                                        }));
+                                readFromJson(context).subscribe(l -> {
+                                    productList.addAll(l);
+                                        }
+                                );
                             }
 
                             @Override
@@ -87,9 +66,10 @@ public class InitialDataParser {
 
                             }
                         }));
-                Log.d("debug","return products");
-               disposable.dispose();
-               return Observable.fromArray(prod);
+
+               listOfList.add(productList);
+                //return ожидаемо вызывается до OnNext() и OnError()
+               return Observable.fromIterable(listOfList);
             }
 
 
