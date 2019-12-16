@@ -3,6 +3,8 @@ package com.alekseymakarov.funboxtestapp.repository;
 import com.alekseymakarov.funboxtestapp.dao.ProductDAO;
 import com.alekseymakarov.funboxtestapp.model.Product;
 import java.util.List;
+
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class Repository implements ProductDAO {
@@ -19,7 +21,8 @@ public class Repository implements ProductDAO {
     }
 
     @Override
-    public void insertProducts(List<Product> products) {
+    public void insertProducts(List<Product> products)
+    {
         productDAO.insertProducts(products);
     }
 

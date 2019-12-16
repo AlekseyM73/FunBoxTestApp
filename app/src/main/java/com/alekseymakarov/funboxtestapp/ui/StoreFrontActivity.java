@@ -13,9 +13,12 @@ import com.alekseymakarov.funboxtestapp.model.Product;
 import com.alekseymakarov.funboxtestapp.utils.EventHelper;
 import com.alekseymakarov.funboxtestapp.utils.InitialDataParser;
 import com.alekseymakarov.funboxtestapp.viewmodel.StoreFrontViewModel;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import java.util.ArrayList;
+import java.util.List;
+import io.reactivex.Observable;
+
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 public class StoreFrontActivity extends AppCompatActivity {
@@ -83,8 +86,14 @@ public class StoreFrontActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(IS_FIRST_RUN, true)) {
             sharedPreferences.edit().putBoolean(IS_FIRST_RUN, false).apply();
 
-            storeFrontViewModel.saveProducts
-                    (InitialDataParser.readInitialProductData(this), new OnSaveProductsFromFileToDBListener() {
+            Observable<List<Product>> observable = InitialDataParser
+                    .readFromCsvOrFallbackToJson(this);
+            List<Product> productList = new ArrayList<>();
+            observable.subscribe(list->{
+                productList.addAll(list);
+            });
+            storeFrontViewModel.saveProducts(productList
+                    , new OnSaveProductsFromFileToDBListener() {
                         @Override
                         public void onSaveFromFileToDBFinished() {
                             loadProductsInAdapter();

@@ -2,7 +2,6 @@ package com.alekseymakarov.funboxtestapp.utils;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.alekseymakarov.funboxtestapp.model.Product;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,32 +11,58 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
+import java.util.concurrent.Callable;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-import static io.reactivex.Observable.fromIterable;
-import static io.reactivex.Observable.never;
-
 public class InitialDataParser {
+    private static CompositeDisposable disposable = new CompositeDisposable();
 
     public static Observable<List<Product>> readFromCsv(Context context) {
                 // TODO: как реализовать?
-                        return Observable.error(new NoSuchElementException("не реализовано"));
+        List<Product> productList = new ArrayList<>();
+        List<List<Product>> listOfProductList = new ArrayList<>();
+
+      Observable<List<Product>> observable = Observable.fromCallable (new Callable<List<Product>>(){
+            @Override
+            public List<Product> call() throws Exception {
+                return readInitialProductData(context);
             }
+        });
+      disposable.add(observable.subscribeOn(Schedulers.io())
+              .subscribeWith(new DisposableObserver<List<Product>>() {
+
+          @Override
+          public void onNext(List<Product> products) {
+              Log.d("testApp","readFromCsv onNext");
+                productList.addAll(products);
+          }
+
+          @Override
+          public void onError(Throwable e) {
+
+          }
+
+          @Override
+          public void onComplete() {
+              Log.d("testApp","readFromCsv onComplete");
+              listOfProductList.add(productList);
+          }
+      }));
+
+      //return Observable.error(new NoSuchElementException("не реализовано"));
+        Log.d("testApp","readFromCsv before return");
+        return Observable.fromIterable(listOfProductList);
+            }
+
             public static Observable<List<Product>> readFromJson(Context context) {
                 return Observable.error(new NoSuchElementException("не реализовано"));
             }
 
             public static Observable<List<Product>> readFromCsvOrFallbackToJson(Context context) {
-                CompositeDisposable disposable = new CompositeDisposable();
+
                 List<Product> productList = new ArrayList<>();
                 List<List<Product>> listOfList = new ArrayList<>();
                 // TODO: Допустим есть readFromCsv и readFromJson,
@@ -59,22 +84,21 @@ public class InitialDataParser {
                                     productList.addAll(l);
                                         }
                                 );
+                                listOfList.add(productList);
                             }
 
                             @Override
                             public void onComplete() {
-
+                                listOfList.add(productList);
                             }
                         }));
 
-               listOfList.add(productList);
                 //return ожидаемо вызывается до OnNext() и OnError()
                return Observable.fromIterable(listOfList);
             }
 
-
-
     public static List<Product> readInitialProductData(Context context) {
+        Log.d("testApp","readInitialProductData");
         ArrayList<Product> products = new ArrayList<>();
         if (context != null) {
             try {
@@ -92,9 +116,9 @@ public class InitialDataParser {
             } catch (IOException i) {
                 i.printStackTrace();
             }
-
         }
-        return null;
+
+        return products;
     }
 
     private static Product parseString(String string) {
